@@ -1,0 +1,41 @@
+using UnityEngine;
+
+public class CamerController : MonoBehaviour
+{
+    public float panSpeed = 50f;        // Set speed of the camera at which moved around the scene 
+    public float panBorderThickness = 10f; // Set frame till where the cursor need to move for action in scene
+    public Vector2 panLimit; // Save limit values of both coordinates x and y
+
+    public float scrollSpeed = 50f; // Set Scroll speed of mouse
+
+    // Update is called once per frame
+    void Update()
+    {
+        Vector3 pos = transform.position;       // save the different coordinates of camera postion 
+
+        if (Input.GetKey("w") || Input.mousePosition.y >= Screen.height - panBorderThickness) // assign key "w" and mouse cursor to move forward  
+        {
+            pos.z += panSpeed * Time.deltaTime; // change the variable to update the position
+        }
+        if (Input.GetKey("s") || Input.mousePosition.y <= panBorderThickness) //assign key "s" and mouse cursor to move backward
+        {
+            pos.z -= panSpeed * Time.deltaTime; // subtract the speed to move in opposite direction
+        }
+        if (Input.GetKey("a") || Input.mousePosition.x >= Screen.width - panBorderThickness) //assign key "a" and mouse cursor to move left of object
+        {
+            pos.x += panSpeed * Time.deltaTime;
+        }
+        if (Input.GetKey("d") || Input.mousePosition.x <=  panBorderThickness) //assign key "d" and mouse cursor to move right of object
+        {
+            pos.x -= panSpeed * Time.deltaTime;
+        }
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");  // Get the scrollwhell and assign speed to move around the wheel
+        pos.y -= scroll * 500f * Time.deltaTime;
+
+        pos.x = Mathf.Clamp(pos.x, -panLimit.x, panLimit.x); // Limit the scene till which position the camera can move
+        pos.z = Mathf.Clamp(pos.z, -panLimit.y, panLimit.y); // Clamp will limit from a minimum to maximum value
+
+        transform.position = pos; // save  the current position into new position  which is updated once 
+    }
+}
